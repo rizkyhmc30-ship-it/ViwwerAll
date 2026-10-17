@@ -1,0 +1,708 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YuditStudio Code Lab</title>
+
+<style>
+:root {
+  --bg: #080b14;
+  --panel: #111729;
+  --panel2: #171f34;
+  --purple: #9565ff;
+  --cyan: #48e5ff;
+  --text: #f3f5ff;
+  --muted: #9ca8c3;
+  --border: #28334d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at top left, #26134a 0, transparent 38%),
+    radial-gradient(ellipse at bottom right, #102c44 0, transparent 35%),
+    var(--bg);
+}
+
+header {
+  padding: 24px 18px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  background: #0b1020d9;
+}
+
+.logo {
+  font-size: 27px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.logo span {
+  color: var(--cyan);
+}
+
+header p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+.container {
+  max-width: 1100px;
+  padding: 20px;
+  margin: auto;
+}
+
+.section-title {
+  font-size: 17px;
+  margin: 5px 0 14px;
+}
+
+.languages {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.lang {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 15px 5px;
+  color: var(--text);
+  cursor: pointer;
+  transition: .25s;
+  font-size: 13px;
+}
+
+.lang strong {
+  display: block;
+  font-size: 22px;
+  margin-bottom: 7px;
+}
+
+.lang:hover {
+  transform: translateY(-3px);
+  border-color: var(--cyan);
+}
+
+.lang.active {
+  background: linear-gradient(135deg, #5532a4, #182c48);
+  border-color: var(--purple);
+  box-shadow: 0 0 20px #9565ff22;
+}
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: #0e1424ed;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.panel-head {
+  padding: 15px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.panel-head strong {
+  font-size: 14px;
+}
+
+.status {
+  color: var(--cyan);
+  font-size: 12px;
+}
+
+#editor {
+  display: block;
+  width: 100%;
+  min-height: 300px;
+  resize: vertical;
+  padding: 18px;
+  color: #d7e4ff;
+  background: #090e19;
+  border: 0;
+  outline: none;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+}
+
+button.action {
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: var(--text);
+  border-radius: 9px;
+  padding: 10px 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+
+button.action:hover {
+  transform: translateY(-2px);
+  border-color: var(--cyan);
+}
+
+button.run {
+  color: #071019;
+  border: 0;
+  background: linear-gradient(135deg, var(--cyan), #8bffdc);
+}
+
+button.reset {
+  color: #ffd5d5;
+}
+
+.output {
+  min-height: 85px;
+  padding: 16px;
+  background: #080d17;
+  color: #a7ffca;
+  font: 13px/1.7 Consolas, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+#preview {
+  display: block;
+  width: 100%;
+  height: 280px;
+  border: 0;
+  background: white;
+}
+
+.preview-placeholder {
+  min-height: 100px;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  text-align: center;
+  color: var(--muted);
+  background: #090e19;
+  font-size: 13px;
+}
+
+footer {
+  text-align: center;
+  padding: 24px 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+footer b {
+  color: var(--cyan);
+}
+
+@media(max-width: 520px) {
+  .container {
+    padding: 12px;
+  }
+
+  .languages {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  #editor {
+    min-height: 260px;
+    font-size: 12px;
+  }
+
+  .logo {
+    font-size: 23px;
+  }
+
+  button.action {
+    padding: 10px;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">YuditStudio <span>Code Lab</span></div>
+  <p>Write code. Run experiments. Build something amazing.</p>
+</header>
+
+<main class="container">
+
+  <h3 class="section-title">Pilih Bahasa Pemrograman</h3>
+
+  <div class="languages">
+    <button class="lang active" data-lang="html">
+      <strong>🌐</strong>HTML
+    </button>
+    <button class="lang" data-lang="css">
+      <strong>🎨</strong>CSS
+    </button>
+    <button class="lang" data-lang="javascript">
+      <strong>⚡</strong>JavaScript
+    </button>
+    <button class="lang" data-lang="python">
+      <strong>🐍</strong>Python
+    </button>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <strong id="editorTitle">Editor HTML</strong>
+      <span class="status" id="status">● Siap digunakan</span>
+    </div>
+
+    <textarea
+      id="editor"
+      spellcheck="false"
+      autocomplete="off"
+      autocapitalize="off"
+      placeholder="Tulis kode di sini..."
+      aria-label="Editor kode"
+    ></textarea>
+
+    <div class="toolbar">
+      <button class="action run" id="runBtn">▶ Run</button>
+      <button class="action" id="undoBtn">↶ Undo</button>
+      <button class="action" id="redoBtn">↷ Redo</button>
+      <button class="action" id="clearBtn">⌫ Clear</button>
+      <button class="action reset" id="resetBtn">⟳ Reset</button>
+      <button class="action" id="downloadBtn">↓ Download</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <strong>Output / Console</strong>
+      <span class="status" id="outputStatus">● Kosong</span>
+    </div>
+    <div id="output" class="output"> </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <strong>Live Preview</strong>
+      <span class="status">● Preview</span>
+    </div>
+    <div id="previewPlaceholder" class="preview-placeholder">
+      Hasil HTML dan CSS akan tampil di sini.
+    </div>
+    <iframe
+      id="preview"
+      title="Live preview"
+      sandbox="allow-scripts"
+      style="display:none"
+    ></iframe>
+  </section>
+
+</main>
+
+<footer>
+  Created with care by <b>YuditStudio</b>
+</footer>
+
+<!-- Python interpreter -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.29.3/full/pyodide.js"></script>
+
+<script>
+const editor = document.getElementById("editor");
+const output = document.getElementById("output");
+const preview = document.getElementById("preview");
+const previewPlaceholder = document.getElementById("previewPlaceholder");
+const statusEl = document.getElementById("status");
+const outputStatus = document.getElementById("outputStatus");
+const editorTitle = document.getElementById("editorTitle");
+
+const languages = ["html", "css", "javascript", "python"];
+let currentLang = "html";
+let pyodideInstance = null;
+let pythonLoading = null;
+
+const samples = {
+  html: '<!DOCTYPE html>\n<html>\n<head>\n  <title>Halaman Saya</title>\n</head>\n<body>\n  <h1>Halo Dunia!</h1>\n  <p>Selamat datang di YuditStudio.</p>\n</body>\n</html>',
+  css: 'body {\n  font-family: Arial, sans-serif;\n  background: #101827;\n  color: white;\n  text-align: center;\n  padding: 50px;\n}\nh1 {\n  color: #48e5ff;\n}',
+  javascript: 'console.log("Halo Dunia!");\nconsole.log("JavaScript berhasil dijalankan.");',
+  python: 'print("Halo Dunia!")\nprint("Python berhasil dijalankan.")'
+};
+
+const states = {};
+
+languages.forEach(lang => {
+  states[lang] = {
+    code: "",
+    history: [""],
+    index: 0
+  };
+});
+
+function setStatus(message) {
+  statusEl.textContent = "● " + message;
+}
+
+function setOutput(message) {
+  output.textContent = message || " ";
+  outputStatus.textContent = message ? "● Ada hasil" : "● Kosong";
+}
+
+function saveCurrent() {
+  states[currentLang].code = editor.value;
+}
+
+function recordHistory() {
+  const state = states[currentLang];
+  const value = editor.value;
+
+  state.code = value;
+
+  if (state.history[state.index] === value) return;
+
+  state.history = state.history.slice(0, state.index + 1);
+  state.history.push(value);
+
+  if (state.history.length > 100) {
+    state.history.shift();
+  }
+
+  state.index = state.history.length - 1;
+}
+
+let historyTimer;
+
+editor.addEventListener("input", () => {
+  saveCurrent();
+  clearTimeout(historyTimer);
+  historyTimer = setTimeout(recordHistory, 250);
+  setStatus("Mengedit " + currentLang.toUpperCase());
+});
+
+function showPreview(html) {
+  preview.style.display = "block";
+  previewPlaceholder.style.display = "none";
+  preview.srcdoc = html;
+}
+
+function clearPreview() {
+  preview.srcdoc = "";
+  preview.style.display = "none";
+  previewPlaceholder.style.display = "grid";
+  previewPlaceholder.textContent =
+    "Hasil " + currentLang.toUpperCase() + " akan tampil di sini.";
+}
+
+function chooseLanguage(lang) {
+  recordHistory();
+  currentLang = lang;
+
+  document.querySelectorAll(".lang").forEach(button => {
+    button.classList.toggle("active", button.dataset.lang === lang);
+  });
+
+  editorTitle.textContent =
+    "Editor " + lang.charAt(0).toUpperCase() + lang.slice(1);
+
+  editor.value = states[lang].code;
+  setOutput("");
+  clearPreview();
+  setStatus("Siap digunakan");
+}
+
+document.querySelectorAll(".lang").forEach(button => {
+  button.addEventListener("click", () => {
+    chooseLanguage(button.dataset.lang);
+  });
+});
+
+document.getElementById("clearBtn").addEventListener("click", () => {
+  recordHistory();
+  editor.value = "";
+  recordHistory();
+  setOutput("");
+  clearPreview();
+  setStatus("Editor dibersihkan");
+});
+
+document.getElementById("undoBtn").addEventListener("click", () => {
+  recordHistory();
+  const state = states[currentLang];
+
+  if (state.index > 0) {
+    state.index--;
+    state.code = state.history[state.index];
+    editor.value = state.code;
+    setStatus("Undo berhasil");
+  } else {
+    setStatus("Tidak ada perubahan sebelumnya");
+  }
+});
+
+document.getElementById("redoBtn").addEventListener("click", () => {
+  recordHistory();
+  const state = states[currentLang];
+
+  if (state.index < state.history.length - 1) {
+    state.index++;
+    state.code = state.history[state.index];
+    editor.value = state.code;
+    setStatus("Redo berhasil");
+  } else {
+    setStatus("Tidak ada perubahan berikutnya");
+  }
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  editor.value = samples[currentLang];
+  recordHistory();
+  setOutput("");
+  clearPreview();
+  setStatus("Contoh kode dimuat");
+});
+
+document.getElementById("downloadBtn").addEventListener("click", () => {
+  recordHistory();
+
+  const extensions = {
+    html: "html",
+    css: "css",
+    javascript: "js",
+    python: "py"
+  };
+
+  const blob = new Blob([editor.value], {
+    type: "text/plain;charset=utf-8"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = "yuditstudio." + extensions[currentLang];
+  a.click();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setStatus("File diunduh");
+});
+
+// Run HTML
+function runHTML(code) {
+  showPreview(code);
+  setOutput("HTML berhasil ditampilkan di Live Preview.");
+}
+
+// Run CSS
+function runCSS(code) {
+  const html =
+    '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
+    '<style>' + code + '</style></head>' +
+    '<body><h1>Preview CSS</h1>' +
+    '<p>Ubah kode CSS untuk melihat perubahannya.</p>' +
+    '<button>Contoh tombol</button></body></html>';
+
+  showPreview(html);
+  setOutput("CSS berhasil diterapkan ke halaman preview.");
+}
+
+// Run JavaScript
+function runJavaScript(code) {
+  const safeCode = JSON.stringify(code);
+
+  const html = `<!DOCTYPE html>
+<html>
+<body style="font-family:Arial;padding:20px">
+<h3>JavaScript Preview</h3>
+<p>Lihat hasil console pada bagian Output.</p>
+<script>
+(function() {
+  const userCode = ${safeCode};
+  const send = (type, args) => {
+    parent.postMessage({
+      source: "yuditstudio-js",
+      type,
+      text: args.map(v => {
+        try {
+          if (typeof v === "object" && v !== null) {
+            return JSON.stringify(v);
+          }
+          return String(v);
+        } catch(e) {
+          return String(v);
+        }
+      }).join(" ")
+    }, "*");
+  };
+
+  console.log = (...args) => send("log", args);
+  console.error = (...args) => send("error", args);
+  console.warn = (...args) => send("warn", args);
+
+  try {
+    new Function(userCode)();
+  } catch(e) {
+    send("error", [e.stack || e.message]);
+  }
+})();
+<\/script>
+</body>
+</html>`;
+
+  setOutput("Menjalankan JavaScript...");
+  showPreview(html);
+}
+
+window.addEventListener("message", event => {
+  if (!event.data || event.data.source !== "yuditstudio-js") return;
+
+  const prefix = event.data.type === "error" ? "ERROR: " :
+                 event.data.type === "warn" ? "WARN: " : "";
+
+  const previous = output.textContent.trim();
+  const next = (previous ? previous + "\n" : "") +
+               prefix + event.data.text;
+
+  output.textContent = next;
+  outputStatus.textContent = "● Console";
+});
+
+// Load Python only when needed
+async function getPyodide() {
+  if (pyodideInstance) return pyodideInstance;
+
+  if (!pythonLoading) {
+    if (typeof loadPyodide !== "function") {
+      throw new Error(
+        "Pyodide tidak berhasil dimuat. Periksa koneksi internet dan buka ulang halaman."
+      );
+    }
+
+    pythonLoading = loadPyodide();
+  }
+
+  pyodideInstance = await pythonLoading;
+  return pyodideInstance;
+}
+
+// Run real Python code
+async function runPython(code) {
+  setOutput("Memuat interpreter Python. Tunggu sebentar...");
+
+  const pyodide = await getPyodide();
+
+  // Capture print() output for this run.
+  pyodide.runPython(`
+import sys
+import io
+_yudit_old_stdout = sys.stdout
+_yudit_buffer = io.StringIO()
+sys.stdout = _yudit_buffer
+`);
+
+  try {
+    const result = await pyodide.runPythonAsync(code);
+
+    const printed = pyodide.runPython(`
+_yudit_text = _yudit_buffer.getvalue()
+sys.stdout = _yudit_old_stdout
+_yudit_text
+`);
+
+    let text = printed || "";
+
+    if (result !== undefined && result !== null) {
+      try {
+        const value = result.toJs ? result.toJs() : result;
+        if (typeof value !== "object") {
+          text += (text ? "\n" : "") + String(value);
+        }
+      } catch (_) {}
+      
+      if (result && typeof result.destroy === "function") {
+        result.destroy();
+      }
+    }
+
+    setOutput(text.trimEnd() || "Program selesai tanpa output.");
+    setStatus("Python berhasil dijalankan");
+  } catch (error) {
+    pyodide.runPython("sys.stdout = _yudit_old_stdout");
+    setOutput("Python Error:\n" + error.message);
+    setStatus("Python mengalami error");
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", async () => {
+  recordHistory();
+
+  const code = editor.value;
+
+  try {
+    if (currentLang === "html") {
+      runHTML(code);
+      setStatus("HTML dijalankan");
+    } else if (currentLang === "css") {
+      runCSS(code);
+      setStatus("CSS dijalankan");
+    } else if (currentLang === "javascript") {
+      setOutput("");
+      runJavaScript(code);
+      setStatus("JavaScript dijalankan");
+    } else if (currentLang === "python") {
+      await runPython(code);
+    }
+  } catch (error) {
+    setOutput("Error:\n" + error.message);
+    setStatus("Terjadi kesalahan");
+  }
+});
+
+// Keyboard shortcuts
+editor.addEventListener("keydown", event => {
+  if (event.key === "Tab") {
+    event.preventDefault();
+
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+
+    editor.setRangeText("  ", start, end, "end");
+    editor.dispatchEvent(new Event("input"));
+  }
+
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
+    event.preventDefault();
+    document.getElementById("downloadBtn").click();
+  }
+});
+
+// Keep all editors blank when the page first opens.
+editor.value = "";
+clearPreview();
+setOutput("");
+</script>
+
+</body>
+</html>
